@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.e_learningacademy.R
 import com.dicoding.e_learningacademy.databinding.FragmentAcademyBinding
@@ -25,9 +26,12 @@ class AcademyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
-            val courses = DataDummy.generateDummyCourses()
+            val viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[AcademyViewModel::class.java]
+            val courses = viewModel.getCourses()
+
             val academyAdapter = AcademyAdapter()
             academyAdapter.setCourses(courses)
+
             with(fragmentAcademyBinding.rvAcademy) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)

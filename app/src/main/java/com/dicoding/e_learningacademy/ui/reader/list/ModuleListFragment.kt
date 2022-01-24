@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.e_learningacademy.R
@@ -13,19 +14,15 @@ import com.dicoding.e_learningacademy.data.ModuleEntity
 import com.dicoding.e_learningacademy.databinding.FragmentModuleListBinding
 import com.dicoding.e_learningacademy.ui.reader.CourseReaderActivity
 import com.dicoding.e_learningacademy.ui.reader.CourseReaderCallback
+import com.dicoding.e_learningacademy.ui.reader.CourseReaderViewModel
 import com.dicoding.e_learningacademy.utils.DataDummy
 
 class ModuleListFragment : Fragment(), MyAdapterClickListener {
 
-    companion object {
-        val TAG: String = ModuleListFragment::class.java.simpleName
-
-        fun newInstance(): ModuleListFragment = ModuleListFragment()
-    }
-
     private lateinit var fragmentModuleListBinding: FragmentModuleListBinding
     private lateinit var adapter: ModuleListAdapter
     private lateinit var courseReaderCallback: CourseReaderCallback
+    private lateinit var viewModel: CourseReaderViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -36,8 +33,10 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(requireActivity(), ViewModelProvider.NewInstanceFactory())[CourseReaderViewModel::class.java]
         adapter = ModuleListAdapter(this)
-        populateRecyclerView(DataDummy.generateDummyModules("a14"))
+        populateRecyclerView(viewModel.getModules())
     }
 
     override fun onAttach(context: Context) {
@@ -47,6 +46,7 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
 
     override fun onItemClicked(position: Int, moduleId: String) {
         courseReaderCallback.moveTo(position, moduleId)
+        viewModel.setSelectedModule(moduleId)
     }
 
     private fun populateRecyclerView(modules: List<ModuleEntity>) {
@@ -59,5 +59,10 @@ class ModuleListFragment : Fragment(), MyAdapterClickListener {
             val dividerItemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
             rvModule.addItemDecoration(dividerItemDecoration)
         }
+    }
+
+    companion object {
+        val TAG: String = ModuleListFragment::class.java.simpleName
+        fun newInstance(): ModuleListFragment = ModuleListFragment()
     }
 }
