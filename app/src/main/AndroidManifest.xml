@@ -14,7 +14,7 @@
         android:fullBackupContent="@xml/backup_descriptor">
         <activity
             android:name=".ui.detail.DetailCourseActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_detail_course"
             android:parentActivityName=".ui.home.HomeActivity"
             android:theme="@style/Theme.ELearningAcademy.NoActionBar">
@@ -24,7 +24,7 @@
         </activity>
         <activity
             android:name=".ui.reader.CourseReaderActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="true">
